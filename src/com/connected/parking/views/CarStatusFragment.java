@@ -14,7 +14,9 @@ import com.connected.parking.utils.Tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context; 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -141,6 +143,13 @@ public class CarStatusFragment extends Fragment{
 			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			cursor.moveToFirst();
 			String path = cursor.getString(column_index);
+			/*Notification notification = new Notification(R.drawable.logo,
+					path, 
+					System.currentTimeMillis());
+			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
+		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
+		    notification.setLatestEventInfo(context, path, path, contentItent); 
+			notificationManager.notify(0, notification);*/
 			File file = new File(path);
 			startUpload(file);
 			break;

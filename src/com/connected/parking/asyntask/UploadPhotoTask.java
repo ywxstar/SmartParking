@@ -18,12 +18,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import com.connected.parking.controller.ProfileController;
+
 import android.R;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context; 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -37,7 +41,7 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 	private static final String UPLOAD_URL = "http://192.168.1.100:8080/"; 
 	
 	private NotificationManager notificationManager= null;
-	int index = 0;
+	//int index = 0;
 	
 	public UploadPhotoTask(Context con, File file, NotificationManager nm){
 		this.tempFile = file;
@@ -46,6 +50,7 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 	}
   
 	//step 4
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
@@ -61,7 +66,11 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
 					"Unknown Error Occured, exiting", 
 					System.currentTimeMillis());
-			notificationManager.notify(++index, notification);
+			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
+		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
+		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
+			notificationManager.notify(1, notification);
+			notificationManager.cancel(1);
 			
 		}else if(result.compareTo("1") == 0){ 
 			//Intent i = new Intent(LoginActivity.this,)
@@ -69,13 +78,19 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
 					"upload success.", 
 					System.currentTimeMillis());
-			notificationManager.notify(++index, notification);
+			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
+		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
+		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
+			notificationManager.notify(2, notification);
 		}else{ 
 			//Toast.makeText(context, "Invalid", 1000).show(); 
 			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
 					"Invalid", 
 					System.currentTimeMillis());
-			notificationManager.notify(++index, notification);
+			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
+		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
+		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
+			notificationManager.notify(3, notification);
 		}
 	}
 
