@@ -54,6 +54,13 @@
       	 <activity 
             android:name="com.connected.parking.controller.SettingController"
             android:label="@string/app_name"></activity>
+      	 
+      	 <receiver 
+      	     android:name="com.connected.parking.utils.MessageBroadcastReceiver">
+      	     <intent-filter >
+      	         <action android:name="com.connected.parking.receive_message"/>
+      	     </intent-filter>
+      	 </receiver>
             
     </application>
 
