@@ -10,6 +10,7 @@ import com.connected.parking.views.UserProfileFragment;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab; 
 import android.app.FragmentTransaction; 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle; 
 import android.support.v4.app.Fragment;
@@ -32,6 +33,8 @@ public class ProfileController extends FragmentActivity{
 	private Tab tabStatus;
 	private Tab tabProfile; 
 	
+	private NotificationManager notificationManager = null;
+	
 	//=================================================
 	//userprofile
 	//=================================================
@@ -51,6 +54,7 @@ public class ProfileController extends FragmentActivity{
 		super.onCreate(savedInstanceState);
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_profile_controller); 
+		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		this.init();
 	}
 	 
@@ -81,7 +85,7 @@ public class ProfileController extends FragmentActivity{
 		fragmentList = new ArrayList<Fragment>();
 		// 初始化Fragment，传入fragmentList
 		search_fragment = new SearchFragment(ProfileController.this);
-		car_status_fragment = new CarStatusFragment(ProfileController.this, this);
+		car_status_fragment = new CarStatusFragment(ProfileController.this, this, notificationManager);
 		uer_profile_fragment = new UserProfileFragment(ProfileController.this); 
 		
 		fragmentList.add(search_fragment);

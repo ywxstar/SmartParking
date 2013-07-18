@@ -14,6 +14,7 @@ import com.connected.parking.utils.Tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context; 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import android.widget.Toast;
 public class CarStatusFragment extends Fragment{
 
 	private Activity activity = null;
+	private NotificationManager notificationManager = null;
 	private Context context = null;
 	private View parentView;
 	
@@ -50,9 +52,10 @@ public class CarStatusFragment extends Fragment{
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
 	
-	public CarStatusFragment(Context con, Activity activity){
+	public CarStatusFragment(Context con, Activity activity, NotificationManager nm){
 		this.context = con;
 		this.activity = activity;
+		this.notificationManager = nm;
 	}
 
 	@Override
@@ -193,7 +196,7 @@ public class CarStatusFragment extends Fragment{
 	 * @param uri
 	 */
 	public void startUpload(File file) {
-		new UploadPhotoTask(context, file).execute();
+		new UploadPhotoTask(context, file, this.notificationManager).execute();
 	}
 	
 }

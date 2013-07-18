@@ -18,7 +18,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import android.R;
 import android.app.Activity;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context; 
@@ -35,11 +37,12 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 	private static final String UPLOAD_URL = "http://192.168.1.100:8080/"; 
 	
 	private NotificationManager notificationManager= null;
+	int index = 0;
 	
-	public UploadPhotoTask(Context con, File file){
+	public UploadPhotoTask(Context con, File file, NotificationManager nm){
 		this.tempFile = file;
 		this.context = con; 
-		//notificationManager = (NotificationManager)activity.getSystemService(NOTIFICATION_SERVICE);
+		this.notificationManager = nm;
 	}
   
 	//step 4
@@ -54,12 +57,25 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 		Toast.makeText(context, result, 1000).show();
 		
 		if(result.compareTo("-1") == 0){ 
-			Toast.makeText(context, "Unknown Error Occured, exiting", 1000).show();
+			//Toast.makeText(context, "Unknown Error Occured, exiting", 1000).show();
+			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
+					"Unknown Error Occured, exiting", 
+					System.currentTimeMillis());
+			notificationManager.notify(++index, notification);
+			
 		}else if(result.compareTo("1") == 0){ 
 			//Intent i = new Intent(LoginActivity.this,)
-			Toast.makeText(context, "upload success.", 1000).show();
+			//Toast.makeText(context, "upload success.", 1000).show();
+			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
+					"upload success.", 
+					System.currentTimeMillis());
+			notificationManager.notify(++index, notification);
 		}else{ 
-			Toast.makeText(context, "Invalid", 1000).show(); 
+			//Toast.makeText(context, "Invalid", 1000).show(); 
+			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
+					"Invalid", 
+					System.currentTimeMillis());
+			notificationManager.notify(++index, notification);
 		}
 	}
 
