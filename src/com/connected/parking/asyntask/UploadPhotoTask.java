@@ -59,6 +59,7 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 		if (null != pDialog && pDialog.isShowing()) {
 			pDialog.dismiss();
 		} 
+		
 		Toast.makeText(context, result, 1000).show();
 		
 		if(result.compareTo("-1") == 0){ 
@@ -66,11 +67,12 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
 					"Unknown Error Occured, exiting", 
 					System.currentTimeMillis());
+			notification.flags |= Notification.DEFAULT_SOUND;
 			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
 		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
 		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
 			notificationManager.notify(1, notification);
-			notificationManager.cancel(1);
+			//notificationManager.cancel(1);
 			
 		}else if(result.compareTo("1") == 0){ 
 			//Intent i = new Intent(LoginActivity.this,)
@@ -82,6 +84,7 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
 		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
 			notificationManager.notify(2, notification);
+			notificationManager.cancel(2);
 		}else{ 
 			//Toast.makeText(context, "Invalid", 1000).show(); 
 			Notification notification = new Notification(R.drawable.ic_lock_idle_alarm,
@@ -91,6 +94,7 @@ public class UploadPhotoTask extends AsyncTask<String, Void, String>{
 		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
 		    notification.setLatestEventInfo(context, "contentTitle", "contentText", contentItent); 
 			notificationManager.notify(3, notification);
+			notificationManager.cancel(3);
 		}
 	}
 

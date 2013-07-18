@@ -15,12 +15,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle; 
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager; 
 import android.support.v4.view.ViewPager.OnPageChangeListener; 
 import android.util.Log;
 import android.view.Window;  
+import android.widget.Toast;
  
 public class ProfileController extends FragmentActivity{ 
 	
@@ -63,9 +65,8 @@ public class ProfileController extends FragmentActivity{
 		Intent notificationIntent =new Intent(ProfileController.this, ProfileController.class); // 点击该通知后要跳转的Activity   
 	    PendingIntent contentItent = PendingIntent.getActivity(this, 0, notificationIntent, 0);   
 	    notif.setLatestEventInfo(this, "contentTitle", "contentText", contentItent); 
-		notificationManager.notify(0, notif);*/
-		notificationManager.cancel(0);
-		notificationManager.cancel(1);
+		notificationManager.notify(0, notif);*/ 
+		
 	}
 	 
 	private void init(){

@@ -30,6 +30,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,7 +49,7 @@ public class CarStatusFragment extends Fragment{
 	private Button upload_photos = null;
 	private String[] items = new String[] { "选择本地图片", "拍照" };
 	//上传图片路径
-	private static final String IMAGE_FILE_NAME = "/smartparking/faceImage.jpg"; 
+	private static final String IMAGE_FILE_NAME = "faceImage.jpg"; 
 	 //请求码 
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int CAMERA_REQUEST_CODE = 1;
@@ -108,8 +109,15 @@ public class CarStatusFragment extends Fragment{
 					Intent intentFromCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 					// 判断存储卡是否可以用，可用进行存储
 					if (Tools.hasSdcard()) {
+						String path = Environment .getExternalStorageDirectory()
+								+ "/smartparking";
+						File dir = new File(path);
+						if(!dir.exists()){ 
+							dir.mkdir(); 
+						}
+						File file = new File(path,  IMAGE_FILE_NAME);
 						intentFromCapture.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(new File(Environment .getExternalStorageDirectory(), IMAGE_FILE_NAME)));
+								Uri.fromFile(file));
 					}
 
 					startActivityForResult(intentFromCapture, CAMERA_REQUEST_CODE);
@@ -133,68 +141,83 @@ public class CarStatusFragment extends Fragment{
 		// TODO Auto-generated method stub 
 		//结果码不等于取消时候
 		if ( data == null){//resultCode != RESULT_OK) {
+			Log.i("StartUpload", "start...");
+			if (CAMERA_REQUEST_CODE == requestCode && Tools.hasSdcard()) { 
+				/* Bundle extras = data.getExtras(); 
+				 Bitmap myBitmap = (Bitmap) extras.getParcelable("data"); */
+				 File myCaptureFile = new File(Environment.getExternalStorageDirectory()+ 
+						 "/smartparking/"+ IMAGE_FILE_NAME); 
+				/* try { 
+					 if(!myCaptureFile.exists()){ 
+						 myCaptureFile.createNewFile(); 
+					 }
+					 
+					 BufferedOutputStream bos;
+					 bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+					 //压缩位图到指定的OutputStream  
+					 myBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);  
+					 //刷新此缓冲区的输出流   
+					 bos.flush(); 
+					 bos.close();    */
+					 //File tempFile = new File(Environment.getExternalStorageDirectory() + IMAGE_FILE_NAME);
+					 startUpload(myCaptureFile); 
+				/* } catch (FileNotFoundException e) {
+					 // TODO Auto-generated catch block
+					 e.printStackTrace();
+				 }  catch (IOException e) {
+					 // TODO Auto-generated catch block
+					 e.printStackTrace();
+				 }     */
+			 } else {
+				Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG).show();
+			} 
 			return ;
 		}else{
-		switch (requestCode) {
-		case IMAGE_REQUEST_CODE:
-			Uri originalUri = data.getData();
-			String []proj = {MediaStore.Images.Media.DATA};
-			Cursor cursor = activity.managedQuery(originalUri, proj, null, null, null);
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-			cursor.moveToFirst();
-			String path = cursor.getString(column_index);
-			/*Notification notification = new Notification(R.drawable.logo,
-					path, 
-					System.currentTimeMillis());
-			Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
-		    PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
-		    notification.setLatestEventInfo(context, path, path, contentItent); 
-			notificationManager.notify(0, notification);*/
-			File file = new File(path);
-			startUpload(file);
-			break;
-		case CAMERA_REQUEST_CODE:
-			if (Tools.hasSdcard()) {
-				
-				 Bundle extras = data.getExtras(); 
-				 Bitmap myBitmap = (Bitmap) extras.getParcelable("data"); 
-				 File myCaptureFile = new File(Environment.getExternalStorageDirectory() + IMAGE_FILE_NAME);
-				 BufferedOutputStream bos;
-				 try {
-					bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-					//压缩位图到指定的OutputStream  
-		            myBitmap.compress(Bitmap.CompressFormat.PNG, 0, bos);  
-		            //刷新此缓冲区的输出流   
-					bos.flush(); 
-				    bos.close();    
-		            //File tempFile = new File(Environment.getExternalStorageDirectory() + IMAGE_FILE_NAME);
-					startUpload(myCaptureFile);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}  catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}  
-	                  
-			} else {
-				Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG).show();
+			switch (requestCode) {
+			case IMAGE_REQUEST_CODE:
+				Uri originalUri = data.getData();
+				String []proj = {MediaStore.Images.Media.DATA};
+				Cursor cursor = activity.managedQuery(originalUri, proj, null, null, null);
+				int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				cursor.moveToFirst();
+				String path = cursor.getString(column_index);
+				File file = new File(path);
+				startUpload(file);
+				break;
+			/*case CAMERA_REQUEST_CODE: 
+			default:
+				Log.i("StartUpload", "start...");
+				if (Tools.hasSdcard()) { 
+					 Bundle extras = data.getExtras(); 
+					 Bitmap myBitmap = (Bitmap) extras.getParcelable("data"); 
+					 File myCaptureFile = new File(Environment.getExternalStorageDirectory()+ 
+							 "/smartparking/"+ IMAGE_FILE_NAME); 
+					 try { 
+						 if(!myCaptureFile.exists()){ 
+							 myCaptureFile.createNewFile(); 
+						 }
+						 
+						 BufferedOutputStream bos;
+						 bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+						 //压缩位图到指定的OutputStream  
+						 myBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);  
+						 //刷新此缓冲区的输出流   
+						 bos.flush(); 
+						 bos.close();    
+						 //File tempFile = new File(Environment.getExternalStorageDirectory() + IMAGE_FILE_NAME);
+						 startUpload(myCaptureFile); 
+					 } catch (FileNotFoundException e) {
+						 // TODO Auto-generated catch block
+						 e.printStackTrace();
+					 }  catch (IOException e) {
+						 // TODO Auto-generated catch block
+						 e.printStackTrace();
+					 }     
+				 } else {
+					Toast.makeText(context, "未找到存储卡，无法存储照片！", Toast.LENGTH_LONG).show();
+				} 
+				break; */
 			}
-
-			break;
-		case RESULT_REQUEST_CODE:
-			if (data != null) {
-				Uri uri = data.getData();
-				String []pro = {MediaStore.Images.Media.DATA};
-				Cursor cursor1 = activity.managedQuery(uri, pro, null, null, null);
-				int column = cursor1.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				cursor1.moveToFirst();
-				String path1 = cursor1.getString(column);
-				File file1 = new File(path1);
-				startUpload(file1);
-			}
-			break;
-		}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
@@ -205,6 +228,13 @@ public class CarStatusFragment extends Fragment{
 	 * @param uri
 	 */
 	public void startUpload(File file) {
+		Notification notification = new Notification(R.drawable.logo,
+		"kjdfk", 
+		System.currentTimeMillis());
+Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
+PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
+notification.setLatestEventInfo(context, "path", "path", contentItent); 
+notificationManager.notify(0, notification);
 		new UploadPhotoTask(context, file, this.notificationManager).execute();
 	}
 	

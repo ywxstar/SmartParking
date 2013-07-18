@@ -8,6 +8,7 @@ import com.connected.parking.utils.AppStatus;
 import com.connected.parking.views.GuideViewPagerAdapter; 
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity; 
 import android.support.v4.view.ViewPager;  
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -41,7 +42,6 @@ public class SplashController extends Activity {
 		Toast.makeText(SplashController.this, String.valueOf(online), 1000).show(); 
 		String hasCon = AppStatus.getConnectionType(this);
 		Toast.makeText(SplashController.this, hasCon, 1000).show();
-		 
 		initGuidePager();
 		initFootBar();  
     }
