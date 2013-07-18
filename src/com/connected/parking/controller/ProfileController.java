@@ -1,68 +1,183 @@
 package com.connected.parking.controller;
+  
+import java.util.ArrayList; 
+import com.connected.parking.R;  
+import com.connected.parking.views.CarStatusFragment;
+import com.connected.parking.views.MainFragmentPagerAdapter;
+import com.connected.parking.views.SearchFragment;
+import com.connected.parking.views.UserProfileFragment;
  
-import java.io.File;
-
-import com.connected.parking.R;
-import com.connected.parking.utils.Tools;
-import com.connected.parking.views.GestureDetectorViewFlipper; 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab; 
+import android.app.FragmentTransaction; 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.os.Bundle; 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager; 
+import android.support.v4.view.ViewPager.OnPageChangeListener; 
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.widget.Toast;
-
-public class ProfileController extends Activity{
-
-	private GestureDetectorViewFlipper viewFlipper = null;
-	private GestureDetector mGestureDetector = null;
+import android.view.Window;  
+ 
+public class ProfileController extends FragmentActivity{ 
 	
-	private int currentPos = 0;
-	private static final int FLING_MIN_DISTANCE = 50;
-	private static final int FLING_MIN_VELOCITY = 0;
+	private ActionBar actionBar;
+	private ViewPager viewPager;
+	private ArrayList<Fragment> fragmentList;
+	private SearchFragment search_fragment = null;
+	private CarStatusFragment car_status_fragment = null;
+	private UserProfileFragment uer_profile_fragment = null;
+	
+	private Tab tabSearch;
+	private Tab tabStatus;
+	private Tab tabProfile; 
 	
 	//=================================================
 	//userprofile
 	//=================================================
-	private ImageView user_imge = null;
+/*	private ImageView user_imge = null;
 	private String[] items = new String[] { "选择本地图片", "拍照" };
-	/* 头像名称 */
+	// 头像名称 
 	private static final String IMAGE_FILE_NAME = "faceImage.jpg";
 
-	/* 请求码 */
+	 //请求码 
 	private static final int IMAGE_REQUEST_CODE = 0;
 	private static final int CAMERA_REQUEST_CODE = 1;
-	private static final int RESULT_REQUEST_CODE = 2;
+	private static final int RESULT_REQUEST_CODE = 2;*/
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.user_profile_controller);
+		//requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.user_profile_controller); 
+		this.init();
+	}
+	 
+	private void init(){
 		
-		viewFlipper = (GestureDetectorViewFlipper)findViewById(R.id.viewflipper1);
-	    mGestureDetector = new GestureDetector(new GDListener());
-	    viewFlipper.setGestureDetector(mGestureDetector); 
-	    show_selected(currentPos);
-	    
-        user_imge = (ImageView)findViewById(R.id.user_image);
+		initViewPager();
+		actionBar = this.getActionBar(); 
+		 
+		//actionBar.setTitle("abc");
+		//actionBar.setIcon(R.drawable.logo);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		
+		
+		tabSearch = actionBar.newTab().setText("Search").setTabListener(new searchFragmentTabListener());
+		actionBar.addTab(tabSearch);
+		tabStatus = actionBar.newTab().setText("Car Status").setTabListener(new statusFragmentTabListener());
+		actionBar.addTab(tabStatus); 
+		tabProfile = actionBar.newTab().setText("Profile").setTabListener(new profileFragmentTabListener());
+		actionBar.addTab(tabProfile);
+		
+		actionBar.setSelectedNavigationItem(0); 
 	}
 	
-	public void ChangeImage(View view){
+	private void initViewPager(){
+		
+		viewPager = (ViewPager) findViewById(R.id.view_pager);
+		fragmentList = new ArrayList<Fragment>();
+		// 初始化Fragment，传入fragmentList
+		search_fragment = new SearchFragment(ProfileController.this);
+		car_status_fragment = new CarStatusFragment(ProfileController.this, this);
+		uer_profile_fragment = new UserProfileFragment(ProfileController.this); 
+		
+		fragmentList.add(search_fragment);
+		fragmentList.add(car_status_fragment);
+		fragmentList.add(uer_profile_fragment);
+		// 设置viewPager的适配器（自定义继承FragmentPagerAdapter的adapter）
+		// 参数分别是FragmentManager和装载Fragment的容器
+		viewPager.setAdapter(new MainFragmentPagerAdapter(this.getSupportFragmentManager(),
+				fragmentList));
+		viewPager.setCurrentItem(0);
+		
+		// 设置ViewPager的页面切换监听事件
+		viewPager.setOnPageChangeListener(new mOnPageChangeListener());
+	}
+	
+	private class mOnPageChangeListener implements OnPageChangeListener{
+
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onPageSelected(int arg0) {
+			// TODO Auto-generated method stub 
+			actionBar.setSelectedNavigationItem(arg0);
+		} 
+	}
+	
+	private class searchFragmentTabListener implements ActionBar.TabListener{
+ 
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+			viewPager.setCurrentItem(0);
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+		
+	}
+	 
+	private class statusFragmentTabListener implements ActionBar.TabListener{
+ 
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+			viewPager.setCurrentItem(1);
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+		
+	}
+	 
+	private class profileFragmentTabListener implements ActionBar.TabListener {
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+
+		@Override
+		public void onTabSelected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+			viewPager.setCurrentItem(2);
+		}
+
+		@Override
+		public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+			// TODO Auto-generated method stub 
+		}
+		
+	}
+	
+	 
+	/*public void ChangeImage(View view){
 		Toast.makeText(ProfileController.this, "Change Image", 1000).show();
 		
 		new AlertDialog.Builder(this)
@@ -103,115 +218,9 @@ public class ProfileController extends Activity{
 			}
 		}).show();
 		
-	}
+	}*/
  
-	
-
-    ///////////////////////////////////////////////////////////////////////////////////////////
-	private void show_selected(int id){ 
-		
-		int[] ratioId = {R.id.user_search_bg, R.id.user_status_bg, R.id.user_profile_bg};
-		ImageView image = (ImageView)findViewById(ratioId[id]);
-		image.setSelected(true);
-	}
-	
-	private void show_noselected(int id){
-		
-		int[] ratioId = {R.id.user_search_bg, R.id.user_status_bg, R.id.user_profile_bg};
-		ImageView image = (ImageView)findViewById(ratioId[id]);
-		image.setSelected(false);;
-	} 
-	
-	
 	/*
-	 * 自定义OnGestureListener类
-	 */
-	private class GDListener implements  android.view.GestureDetector.OnGestureListener{
-
-		@Override
-		public boolean onDown(MotionEvent arg0) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-				float velocityY) {
-			// TODO Auto-generated method stub
-			if (e1.getX() - e2.getX()> FLING_MIN_DISTANCE && 
-					Math.abs(velocityX) > FLING_MIN_VELOCITY) {
-				Log.e("fling", "left");
-				showNextView();
-				return true;
-			} else if (e2.getX() - e1.getX() > FLING_MIN_DISTANCE && 
-					Math.abs(velocityX) > FLING_MIN_VELOCITY){
-				Log.e("fling", "right");
-				showPreviousView();
-				return true;
-			}
-			return false;
-		}
-
-		@Override
-		public void onLongPress(MotionEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
-				float arg3) {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public void onShowPress(MotionEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public boolean onSingleTapUp(MotionEvent arg0) {
-			// TODO Auto-generated method stub
-			return false;
-		}
- 
-	}
-	
-	private void showNextView(){
-		
-		viewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_in));
-		viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.push_left_out));		
-		viewFlipper.showNext();
-		currentPos++;
-		if(currentPos == viewFlipper.getChildCount()){
-			currentPos = 0;
-			show_selected(currentPos);
-			show_noselected(viewFlipper.getChildCount()-1); 
-		}else{
-			show_selected(currentPos);
-			show_noselected(currentPos-1); 
-		}
-	}
-	
-	private void showPreviousView(){
-		
-		viewFlipper.setInAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_in));
-		viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(this, R.anim.push_right_out));
-		viewFlipper.showPrevious();
-		
-		currentPos--;
-		if(currentPos == -1){
-			currentPos = viewFlipper.getChildCount()-1;
-			show_selected(currentPos);
-			show_noselected(0); 
-		}else{
-			show_selected(currentPos);
-			show_noselected(currentPos+1); 
-		}
-	}
- 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -247,7 +256,7 @@ public class ProfileController extends Activity{
 	 * 裁剪图片方法实现
 	 * 
 	 * @param uri
-	 */
+	 *//*
 	public void startPhotoZoom(Uri uri) {
 
 		Intent intent = new Intent("com.android.camera.action.CROP");
@@ -264,11 +273,11 @@ public class ProfileController extends Activity{
 		startActivityForResult(intent, 2);
 	}
 
-	/**
+	*//**
 	 * 保存裁剪之后的图片数据
 	 * 
 	 * @param picdata
-	 */
+	 *//*
 	private void getImageToView(Intent data) {
 		Bundle extras = data.getExtras();
 		if (extras != null) {
@@ -276,6 +285,6 @@ public class ProfileController extends Activity{
 			Drawable drawable = new BitmapDrawable(photo);
 			user_imge.setImageDrawable(drawable);
 		}
-	}
+	}*/
   
 }
