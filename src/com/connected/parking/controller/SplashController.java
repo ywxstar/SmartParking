@@ -10,14 +10,18 @@ import com.connected.parking.views.GuideViewPagerAdapter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity; 
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;  
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;  
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class SplashController extends Activity {
@@ -91,5 +95,6 @@ public class SplashController extends Activity {
 		currentPos = 0;
 		foot_bar[currentPos].setSelected(true);
 	}
+	 
   
 }

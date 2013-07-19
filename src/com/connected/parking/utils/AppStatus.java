@@ -11,7 +11,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 public class AppStatus {
-	
+	 
 	public AppStatus(){
 		
 	}
