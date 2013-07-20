@@ -24,7 +24,7 @@
         <Button
             android:id="@+id/login"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:layout_marginRight="2dp"
             android:layout_weight="1"  
             android:background="#d5f6c5" 
@@ -34,7 +34,7 @@
 	    <Button
 	        android:id="@+id/signup" 
 	        android:layout_width="match_parent"
-	        android:layout_height="match_parent" 
+	        android:layout_height="50dp" 
 	        android:layout_marginLeft="2dp"
 	        android:layout_weight="1"
 			android:textColor="#3cc1f8"

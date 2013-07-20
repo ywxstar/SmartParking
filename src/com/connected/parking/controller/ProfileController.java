@@ -97,7 +97,7 @@ public class ProfileController extends FragmentActivity{
 		// 初始化Fragment，传入fragmentList
 		search_fragment = new SearchFragment(ProfileController.this);
 		car_status_fragment = new CarStatusFragment(ProfileController.this, this, notificationManager);
-		uer_profile_fragment = new UserProfileFragment(ProfileController.this); 
+		uer_profile_fragment = new UserProfileFragment(ProfileController.this, this, notificationManager); 
 		
 		fragmentList.add(search_fragment);
 		fragmentList.add(car_status_fragment);
