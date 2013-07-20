@@ -21,6 +21,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager; 
 import android.support.v4.view.ViewPager.OnPageChangeListener; 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;  
 import android.widget.Toast;
  
@@ -72,22 +74,19 @@ public class ProfileController extends FragmentActivity{
 	private void init(){
 		
 		initViewPager();
-		actionBar = this.getActionBar(); 
-		 
-		//actionBar.setTitle("abc");
-		//actionBar.setIcon(R.drawable.logo);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		
-		
-		tabSearch = actionBar.newTab().setText("Search").setTabListener(new searchFragmentTabListener());
-		actionBar.addTab(tabSearch);
-		tabStatus = actionBar.newTab().setText("Car Status").setTabListener(new statusFragmentTabListener());
-		actionBar.addTab(tabStatus); 
-		tabProfile = actionBar.newTab().setText("Profile").setTabListener(new profileFragmentTabListener());
-		actionBar.addTab(tabProfile);
-		
-		actionBar.setSelectedNavigationItem(0); 
+//		actionBar = this.getActionBar(); 
+//		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setTitle("");
+//		//actionBar.setIcon(R.drawable.logo);
+//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//		tabSearch = actionBar.newTab().setText("Search").setTabListener(new searchFragmentTabListener());
+//		actionBar.addTab(tabSearch);
+//		tabStatus = actionBar.newTab().setText("Car Status").setTabListener(new statusFragmentTabListener());
+//		actionBar.addTab(tabStatus); 
+//		tabProfile = actionBar.newTab().setText("Profile").setTabListener(new profileFragmentTabListener());
+//		actionBar.addTab(tabProfile);
+//		
+//		actionBar.setSelectedNavigationItem(0); 
 	}
 	
 	private void initViewPager(){
@@ -129,7 +128,7 @@ public class ProfileController extends FragmentActivity{
 		@Override
 		public void onPageSelected(int arg0) {
 			// TODO Auto-generated method stub 
-			actionBar.setSelectedNavigationItem(arg0);
+			//actionBar.setSelectedNavigationItem(arg0);
 		} 
 	}
 	
@@ -189,6 +188,22 @@ public class ProfileController extends FragmentActivity{
 			// TODO Auto-generated method stub 
 		}
 		
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		super.onCreateOptionsMenu(menu);
+		 //添加菜单项
+      /*  MenuItem add=menu.add(0,0,0,"add");
+        MenuItem del=menu.add(0,0,0,"del");
+        MenuItem save=menu.add(0,0,0,"save");
+        //绑定到ActionBar  
+        save.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        del.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
+        
+        return true;
 	}
 	
 	 
@@ -301,5 +316,7 @@ public class ProfileController extends FragmentActivity{
 			user_imge.setImageDrawable(drawable);
 		}
 	}*/
+	
+	
   
 }

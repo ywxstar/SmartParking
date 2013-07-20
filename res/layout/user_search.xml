@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
     
+    <Button
+        android:id="@+id/setting_network"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="network setting"
+        android:background="#eeaaee"/>
+    
     <TextView 
-        android:id="@+id/tv"
+        android:id="@+id/tv_warning"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="46dp" 
+        android:layout_centerInParent="true"
+        android:text="网络已断开，无法联网"
+        android:background="#ffffff"
+        android:textColor="#aa3300"
+        android:textSize="32sp" />
+        
+     
+    
+    <Button
+        android:id="@+id/search_view"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="搜索"
+        android:layout_centerHorizontal="true"
         />
     
 
-</LinearLayout>
+</RelativeLayout>

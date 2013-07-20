@@ -89,13 +89,13 @@ public class GuideViewPagerAdapter extends PagerAdapter{
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if(!AppStatus.isOnline(activity.getApplicationContext())){
-						showUserInvalidAlert();
-					}else{
+//					if(!AppStatus.isOnline(activity.getApplicationContext())){
+//						showUserInvalidAlert();
+//					}else{
 						Intent intent = new Intent(activity, LoginController.class);
 						//activity.finish();
 						activity.startActivity(intent);
-					}
+//					}
 				}
 			});
 			signup.setOnClickListener(new OnClickListener() {
