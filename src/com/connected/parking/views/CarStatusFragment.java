@@ -76,6 +76,7 @@ public class CarStatusFragment extends Fragment{
 	private View init(LayoutInflater inflater, ViewGroup container) {
 		View view = inflater.inflate(R.layout.user_car_status, container, false);  
 		upload_photos = (Button) view.findViewById(R.id.upload_photo);
+	    
 		upload_photos.setOnClickListener(new uploadClickListener());
 		return view; 
 	}
@@ -227,14 +228,7 @@ public class CarStatusFragment extends Fragment{
 	 * 
 	 * @param uri
 	 */
-	public void startUpload(File file) {
-		Notification notification = new Notification(R.drawable.logo,
-		"kjdfk", 
-		System.currentTimeMillis());
-Intent notificationIntent =new Intent(context, ProfileController.class); // 点击该通知后要跳转的Activity   
-PendingIntent contentItent = PendingIntent.getActivity(context, 0, notificationIntent, 0);   
-notification.setLatestEventInfo(context, "path", "path", contentItent); 
-notificationManager.notify(0, notification);
+	public void startUpload(File file) { 
 		new UploadPhotoTask(context, file, this.notificationManager).execute();
 	}
 	

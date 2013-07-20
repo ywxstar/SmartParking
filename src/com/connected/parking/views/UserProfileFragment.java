@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -75,8 +76,19 @@ public class UserProfileFragment extends Fragment{
 		
 		View view = inflater.inflate(R.layout.user_profile, container, false); 
 	    user_image = (ImageView)view.findViewById(R.id.user_image);
+	    Bitmap tempBitmap = getBitmapResource();
+	    if(tempBitmap != null){
+	    	user_image.setImageBitmap(tempBitmap);
+	    }
 		user_image.setOnClickListener(new uploadListener());
 		return view; 
+	}
+	
+	private Bitmap getBitmapResource(){
+		Bitmap bitmap = null;
+		String file_path = Environment.getExternalStorageDirectory() + "/smartparking/temp.png";
+		bitmap = BitmapFactory.decodeFile(file_path);
+		return bitmap;
 	}
 	
 	class uploadListener implements OnClickListener{
