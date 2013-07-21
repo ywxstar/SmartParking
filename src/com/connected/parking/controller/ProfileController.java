@@ -6,13 +6,14 @@ import com.connected.parking.views.CarStatusFragment;
 import com.connected.parking.views.MainFragmentPagerAdapter;
 import com.connected.parking.views.SearchFragment;
 import com.connected.parking.views.UserProfileFragment;
- 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab; 
+import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.IntentAction;
+  
 import android.app.FragmentTransaction; 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle; 
 import android.os.Environment;
@@ -24,20 +25,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;  
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.Toast;
+ 
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
+import com.markupartist.android.widget.ActionBar.IntentAction;
  
 public class ProfileController extends FragmentActivity{ 
 	
-	private ActionBar actionBar;
+	//private ActionBar actionBar;
 	private ViewPager viewPager;
 	private ArrayList<Fragment> fragmentList;
 	private SearchFragment search_fragment = null;
 	private CarStatusFragment car_status_fragment = null;
 	private UserProfileFragment uer_profile_fragment = null;
 	
-	private Tab tabSearch;
-	private Tab tabStatus;
-	private Tab tabProfile; 
+//	private Tab tabSearch;
+//	private Tab tabStatus;
+//	private Tab tabProfile; 
 	
 	private NotificationManager notificationManager = null;
 	
@@ -58,8 +66,8 @@ public class ProfileController extends FragmentActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
-		requestWindowFeature(Window.FEATURE_ACTION_BAR);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		//requestWindowFeature(Window.FEATURE_ACTION_BAR);
 		setContentView(R.layout.user_profile_controller); 
 		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		this.init();
@@ -73,12 +81,24 @@ public class ProfileController extends FragmentActivity{
 	 
 	private void init(){
 		
+		final ActionBar actionBar = (ActionBar) findViewById(R.id.profile_actionbar);
+        actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.logo));
+        actionBar.setTitle("Home");
+
+        final Action shareAction = new IntentAction(ProfileController.this, createShareIntent(), R.drawable.icon);
+        actionBar.addAction(shareAction);
+		
 		initViewPager();
-//		actionBar = this.getActionBar(); 
+		//actionBar = this.getActionBar(); 
+		//actionBar.setBottom(new Button("abc"));
 //		actionBar.setDisplayHomeAsUpEnabled(true);
 //		actionBar.setTitle("");
 //		//actionBar.setIcon(R.drawable.logo);
 //		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//		actionBar.setDisplayShowTitleEnabled(false);
+//		actionBar.setDisplayShowHomeEnabled(false);
+//		
+//		
 //		tabSearch = actionBar.newTab().setText("Search").setTabListener(new searchFragmentTabListener());
 //		actionBar.addTab(tabSearch);
 //		tabStatus = actionBar.newTab().setText("Car Status").setTabListener(new statusFragmentTabListener());
@@ -89,6 +109,22 @@ public class ProfileController extends FragmentActivity{
 //		actionBar.setSelectedNavigationItem(0); 
 	}
 	
+	//===========================================
+	//actionbar
+	//===========================================
+	public static Intent createIntent(Context context) {
+        Intent i = new Intent(context, LoginController.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return i;
+	}
+	private Intent createShareIntent() {
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "Shared from the ActionBar widget.");
+        return Intent.createChooser(intent, "Share");
+    }
+	  
+	////////////////////////////////////////////////////////////////////////
 	private void initViewPager(){
 		
 		viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -132,7 +168,7 @@ public class ProfileController extends FragmentActivity{
 		} 
 	}
 	
-	private class searchFragmentTabListener implements ActionBar.TabListener{
+	/*private class searchFragmentTabListener implements ActionBar.TabListener{
  
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub 
@@ -195,16 +231,16 @@ public class ProfileController extends FragmentActivity{
 		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu);
 		 //添加菜单项
-      /*  MenuItem add=menu.add(0,0,0,"add");
+        MenuItem add=menu.add(0,0,0,"add");
         MenuItem del=menu.add(0,0,0,"del");
         MenuItem save=menu.add(0,0,0,"save");
         //绑定到ActionBar  
         save.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         add.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        del.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
+        del.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         
         return true;
-	}
+	}*/
 	
 	 
 	/*public void ChangeImage(View view){
