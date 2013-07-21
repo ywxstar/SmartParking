@@ -39,7 +39,7 @@ public class User implements Serializable {
 	public void save() {
 		FileOutputStream fos;
 		try {
-			fos = Session.getContext().openFileOutput(saveFileName, Context.MODE_PRIVATE);
+			fos = SessionManager.getContext().openFileOutput(saveFileName, Context.MODE_PRIVATE);
 			ObjectOutputStream os = new ObjectOutputStream(fos);
 			os.writeObject(this);
 			os.close();
@@ -58,7 +58,7 @@ public class User implements Serializable {
 	public static User load() {
 		FileInputStream fis;
 		try {
-			fis = Session.getContext().openFileInput(saveFileName);
+			fis = SessionManager.getContext().openFileInput(saveFileName);
 
 			ObjectInputStream is = new ObjectInputStream(fis);
 			User user = (User) is.readObject();

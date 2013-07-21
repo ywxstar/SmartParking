@@ -1,27 +1,40 @@
 package com.connected.parking.controller;
  
+import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.connected.parking.R;  
+import com.connected.parking.model.SessionManager;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.app.SearchManager.OnDismissListener; 
+import android.content.DialogInterface;
+import android.content.Intent; 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,6 +50,10 @@ public class LoginController extends Activity{
 	private EditText passwd;
 	private Button submit; 
 	private String response;
+	 
+	private boolean error = false;	 
+	HttpResponse responseGet; 
+    SessionManager session;	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +135,7 @@ public class LoginController extends Activity{
 	}
 
 
-	class LoginTask extends AsyncTask<String, Void, String>{
+	class LoginTask extends AsyncTask<String, Void, String> implements DialogInterface.OnDismissListener{
  
 		private ProgressDialog pDialog;
 		/*
@@ -156,19 +173,32 @@ public class LoginController extends Activity{
 			super.onProgressUpdate(values);
 		}
 		
+
+		/*
+		{
+		    "access_token": "fb2e77d.47a0479900504cb3ab4a1f626d174d2d",
+		    "user": {
+		        "id": "1574083",
+		        "username": "snoopdogg",
+		        "full_name": "Snoop Dogg",
+		        "profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg"
+		    }
+		}						
+		*/
+		
 		/*
 		 * step 4
 		 */
 		@Override
-		protected void onPostExecute(String response) {
+		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub 
-			super.onPostExecute(response);
+			super.onPostExecute(result);
 			
 			if (null != pDialog && pDialog.isShowing()) {
 				pDialog.dismiss();
 			}
 			
-			Toast.makeText(LoginController.this, response, 1000).show();
+			/*Toast.makeText(LoginController.this, response, 1000).show();
 			
 			if(response.compareTo("-1") == 0){
 				
@@ -180,7 +210,40 @@ public class LoginController extends Activity{
 				
 				Toast.makeText(LoginController.this, "Invalid Username/Password", 1000).show();
 				//Utils.showToast("Invalid Username/Password", getApplicationContext());
-			}
+			}*/
+			 
+			StatusLine statusLine = responseGet.getStatusLine();
+	        if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+	        	JSONObject data,user;
+				try {
+					 data = new JSONObject(result);
+					 String token = data.getString("access_token");
+					 user = data.getJSONObject("user");
+					 String username = user.getString("username"), 
+							 id = user.getString("id"), 
+							 img =user.getString("profile_picture") ;
+	                 session.createLoginSession(username, id, token, img);
+	                 
+		 			 Intent intent = new Intent(LoginController.this,  ProfileController.class);
+		 			 intent.putExtra("username", username );
+		 			 intent.putExtra("profile_picture", img );
+		 			 intent.putExtra("id",id );
+		 			  
+					 startActivity(intent);
+					 overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+					 finish();
+					 
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Toast.makeText(LoginController.this, "Invalid JSON", 1000).show();
+				}
+				
+	         }else if(statusLine.getStatusCode() == HttpStatus.SC_NOT_FOUND){	          
+				
+	        	 Toast.makeText(LoginController.this, "Invalid Username/Password", 1000).show();	        	 
+	         }else{
+	        	 	        	 	        	 
+	         }			
 		}
 
 		String trylogin(){
@@ -198,14 +261,18 @@ public class LoginController extends Activity{
 	        nvps.add(new BasicNameValuePair("device-uuid",deviceId));*/
 			
 	        try{
-	        	 
+	        	  
+	        	HttpParams myParams = new BasicHttpParams();   
+	        	HttpConnectionParams.setConnectionTimeout(myParams, 4000);
+	            HttpConnectionParams.setSoTimeout(myParams, 4000);
+	            HttpClient client = new DefaultHttpClient(myParams); 
 	        	
-	        	HttpClient client = new DefaultHttpClient();  
 		        user_name = URLEncoder.encode(user_name, "utf-8");
 		        password = URLEncoder.encode(password, "utf-8");
-		        Resources r = getResources();
-			   /* String getURL = r.getString(R.string.root_url) + "login_user.php" + 
-			    		"?uname=" + user_name+ "&pwd=" + password;*/
+		        
+		        /*Resources r = getResources();
+			    String getURL = r.getString(R.string.root_url) + "login_user.php" + 
+			    		"?uname=" + user_name+ "&pwd=" + password;
 		        String getURL = "http://192.168.0.2:8080/sessionsMobile";
 			    HttpPost post = new HttpPost(getURL);
 			    UrlEncodedFormEntity p_entity = new UrlEncodedFormEntity(nvps,HTTP.UTF_8);
@@ -217,14 +284,60 @@ public class LoginController extends Activity{
 			    if (resEntityGet != null) {  
 			    	response = EntityUtils.toString(resEntityGet);
 			    	System.out.println(response);
+			    }*/
+		        
+		        String getURL = "http://192.168.1.129:8080/sessions";
+			    HttpPost post = new HttpPost(getURL);
+			    post.setHeader("Accept", "application/json;q=0.9");  
+			    UrlEncodedFormEntity p_entity = new UrlEncodedFormEntity(nvps,HTTP.UTF_8);
+			    post.setEntity(p_entity);
+			    //HttpResponse 
+			    responseGet = client.execute(post);  
+			   
+			    ///////////////////
+			    HttpEntity resEntityGet = responseGet.getEntity();  
+			    if (resEntityGet != null) {  
+			    	response = EntityUtils.toString(resEntityGet);
+			    	System.out.println(response);
 			    }
 			    
-		    } catch(Exception e){
+			    
+		    } catch (ClientProtocolException e) {
+	            Log.w("HTTP2:",e );
+	            error = true;
+	            cancel(true);
+	        } catch (UnknownHostException  e) {
+	        	// no network
+	            Log.w("HTTP3:",e );
+	            error = true;
+	            cancel(true); 
+	        }catch (SocketTimeoutException e) {
+	            Log.w("HTTP2:",e );
+	            error = true;
+	            cancel(true);
+	        }catch (Exception e) {
+	            Log.w("HTTP4:",e );
+	            error = true;
+	            cancel(true);
+	        }
+	       /* catch(Exception e){
 		    	e.printStackTrace();
 	        	response = "-1";
 	        }
-			
+			*/
 			return response;
+		}
+  
+		/*@Override
+		public void onDismiss() {
+			// TODO Auto-generated method stub
+			this.cancel(true);
+		}*/
+
+		@Override
+		public void onDismiss(DialogInterface dialog) {
+			// TODO Auto-generated method stub
+			this.cancel(true);
 		}
 		 
 		/*private String getSha(String in) {
