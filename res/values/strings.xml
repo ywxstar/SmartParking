@@ -20,5 +20,7 @@
     
     <!-- action bar -->
     <string name="actionbar_activity_not_found">Failed to open intent...</string>
+    
+    <string name="viewpager">ViewPager</string>
 
 </resources>

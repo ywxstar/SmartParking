@@ -23,5 +23,11 @@
   	 	<item name="android:paddingLeft">25.0dip</item> 
   	 	<item name="android:maxHeight">10.0dip</item> 
   	</style>
+  	
+   	<style name="ExampleTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="homeAsUpIndicator">@drawable/new_indicator</item>
+        <item name="android:homeAsUpIndicator">@drawable/new_indicator</item>
+    </style>
+   	
 
 </resources>

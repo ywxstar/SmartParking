@@ -10,6 +10,7 @@ import com.connected.parking.R;
 import com.connected.parking.asyntask.UploadPhotoTask;
 import com.connected.parking.controller.ProfileController;
 import com.connected.parking.utils.Tools;
+import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -46,6 +47,7 @@ public class UserProfileFragment extends Fragment{
 	private NotificationManager notifiManager;
 	private View parentView;
 	ImageView user_image;
+	private View view;
 	
 	private String[] items = new String[] { "选择本地图片", "拍照" };
 	//上传图片路径
@@ -74,14 +76,26 @@ public class UserProfileFragment extends Fragment{
 	//====================================
 	private View init(LayoutInflater inflater, ViewGroup container) {
 		
-		View view = inflater.inflate(R.layout.user_profile, container, false); 
+		view = inflater.inflate(R.layout.user_profile, container, false); 
 	    user_image = (ImageView)view.findViewById(R.id.user_image);
+	    ImageView user_setting = (ImageView)view.findViewById(R.id.user_setting);
+	    user_setting.setOnClickListener(new UserSettingClickListener());
 	    Bitmap tempBitmap = getBitmapResource();
 	    if(tempBitmap != null){
 	    	user_image.setImageBitmap(tempBitmap);
 	    }
 		user_image.setOnClickListener(new uploadListener());
 		return view; 
+	}
+	
+	class UserSettingClickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			((SlidingFragmentActivity) activity).toggle();
+		}
+		
 	}
 	
 	private Bitmap getBitmapResource(){

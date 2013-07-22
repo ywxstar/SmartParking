@@ -1,9 +1,6 @@
 package com.connected.parking.controller;
   
-import com.connected.parking.R;    
-import com.markupartist.android.widget.ActionBar;
-import com.markupartist.android.widget.ActionBar.Action;
-import com.markupartist.android.widget.ActionBar.IntentAction;
+import com.connected.parking.R;     
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,13 +24,13 @@ public class LearnMoreController extends Activity{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.learn_more);
 		
-
+/*
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         actionBar.setHomeAction(new IntentAction(this, createIntent(this), R.drawable.logo));
         actionBar.setTitle("Home");
 
         final Action shareAction = new IntentAction(LearnMoreController.this, createShareIntent(), R.drawable.icon);
-        actionBar.addAction(shareAction);
+        actionBar.addAction(shareAction);*/
 		
 		/*mPullRefreshWebView = (PullToRefreshWebView) findViewById(R.id.pull_refresh_webview);
 		mWebView = mPullRefreshWebView.getRefreshableView();

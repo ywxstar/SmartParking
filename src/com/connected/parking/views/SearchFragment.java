@@ -29,6 +29,9 @@ public class SearchFragment extends Fragment{
 	TextView warning_text;
 	Button search_view;
 	
+	public SearchFragment(){ 
+	}
+	
 	public SearchFragment(Context con ){
 		this.context = con ;
 	}
