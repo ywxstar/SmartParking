@@ -3,6 +3,8 @@ package com.connected.parking.controller;
 import java.util.ArrayList;
   
 import android.app.NotificationManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -99,6 +101,9 @@ public class ProfileController extends BaseActivity {
 		tabProfile = actionBar.newTab().setText("Profile").setTabListener(new profileFragmentTabListener());
 		actionBar.addTab(tabProfile); 
 		actionBar.setSelectedNavigationItem(0); 
+		ColorDrawable color = new ColorDrawable(Color.RED);
+		color.setAlpha(255);
+		actionBar.setBackgroundDrawable(color);
 		
 		getSlidingMenu().setSecondaryMenu(R.layout.setting_controller);
 		getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadowright);
