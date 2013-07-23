@@ -159,8 +159,7 @@
 		                    android:id="@+id/login_with_twitter"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_gravity="center"
-			                android:onClick="onToggleClicked"
+			                android:layout_gravity="center" 
 			                style="@style/MyCheckBox"
 		                /> 
 		            </LinearLayout>
@@ -218,8 +217,7 @@
 		                    android:id="@+id/login_with_facebook"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_gravity="center"
-			                android:onClick="onToggleClicked"
+			                android:layout_gravity="center" 
 			                style="@style/MyCheckBox"
 		                />
 		            </LinearLayout>
@@ -253,8 +251,7 @@
 		                    android:id="@+id/public_on_timeline"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_gravity="center"
-			                android:onClick="onToggleClicked"
+			                android:layout_gravity="center" 
 			                android:checked="false"
 			                style="@style/MyCheckBox"/>
 		            </LinearLayout>
@@ -311,8 +308,7 @@
 		                    android:id="@+id/mobile_notification"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_gravity="center"
-			                android:onClick="onToggleClicked"
+			                android:layout_gravity="center" 
 			                android:checked="false"
 			                style="@style/MyCheckBox"/>
 		            </LinearLayout>

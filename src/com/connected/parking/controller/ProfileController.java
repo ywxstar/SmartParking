@@ -105,8 +105,8 @@ public class ProfileController extends BaseActivity {
 		color.setAlpha(255);
 		actionBar.setBackgroundDrawable(color);
 		
-		getSlidingMenu().setSecondaryMenu(R.layout.setting_controller);
-		getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadowright);
+		//getSlidingMenu().setSecondaryMenu(R.layout.setting_controller);
+		//getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadowright);
 		/*getSupportFragmentManager()
 		.beginTransaction()
 		.replace(R.id.menu_frame_two, new SampleListFragment())

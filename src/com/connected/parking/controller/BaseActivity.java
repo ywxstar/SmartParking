@@ -1,19 +1,20 @@
 package com.connected.parking.controller;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction; 
+import android.annotation.SuppressLint;
+import android.os.Bundle; 
+import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.connected.parking.R; 
+import com.connected.parking.views.PreferenceSettingFragment;
 import com.slidingmenu.lib.SlidingMenu;
 import com.slidingmenu.lib.app.SlidingFragmentActivity;
 
+@SuppressLint("NewApi")
 public class BaseActivity extends SlidingFragmentActivity {
 
-	private int mTitleRes;
-	protected Fragment mFrag;
+	private int mTitleRes; 
 
 	public BaseActivity(int titleRes) {
 		mTitleRes = titleRes;
@@ -27,17 +28,16 @@ public class BaseActivity extends SlidingFragmentActivity {
 
 		// set the Behind View
 		setBehindContentView(R.layout.menu_frame);
-		/*FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-		mFrag = new SampleListFragment();
-		t.replace(R.id.menu_frame, mFrag);
-		t.addToBackStack(null);
-		t.commit();*/
-		
+		FragmentTransaction t = this.getSupportFragmentManager().beginTransaction(); 
+		t.replace(R.id.menu_frame, new PreferenceSettingFragment());
+		//t.addToBackStack(null);
+		t.commit();
+
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
 		
 		// Test
-		sm.setSecondaryMenu(R.layout.properties);
+		//sm.setSecondaryMenu(R.layout.properties);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setShadowDrawable(R.drawable.shadow);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
