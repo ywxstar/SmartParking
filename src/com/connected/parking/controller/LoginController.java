@@ -24,6 +24,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.actionbarsherlock.widget.SearchView;
 import com.connected.parking.R;  
 import com.connected.parking.model.SessionManager;
 
@@ -60,8 +61,15 @@ public class LoginController extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.login_controller);
+		setContentView(R.layout.login_controller2);
 		
+		/*SearchView searchView = (SearchView)findViewById(R.id.search_view);
+		
+		searchView.setIconifiedByDefault(true);
+		//searchView.setOnQueryTextListener(this);
+		searchView.setSubmitButtonEnabled(false);
+		searchView.setQueryHint("INPUT");*/
+
 		uname = (EditText) findViewById(R.id.etusername);
 		passwd = (EditText) findViewById(R.id.etpassword);
 		submit = (Button) findViewById(R.id.blogin); 
@@ -91,12 +99,12 @@ public class LoginController extends Activity{
 	}
 	
 	
-	public void ToLearnMore(View view){
+	/*public void ToLearnMore(View view){
 		
 		Intent intent = new Intent(LoginController.this, LearnMoreController.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
-	}
+	}*/
 	
 	public void AppSetting(View view){
 		Intent intent = new Intent(LoginController.this, SettingController.class);

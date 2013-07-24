@@ -91,14 +91,15 @@ public class ProfileController extends BaseActivity {
 		//actionBar.setDisplayHomeAsUpEnabled(true);
 		//actionBar.setIcon(R.drawable.logo);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//actionBar.setHomeButtonEnabled(true); 
 //		actionBar.setDisplayShowTitleEnabled(false);
 //		actionBar.setDisplayShowHomeEnabled(false);
 		 
-		tabSearch = actionBar.newTab().setText("Search").setTabListener(new searchFragmentTabListener());
+		tabSearch = actionBar.newTab().setIcon(R.drawable.abs__ic_search)./*setText("Search").*/setTabListener(new searchFragmentTabListener());
 		actionBar.addTab(tabSearch);
-		tabStatus = actionBar.newTab().setText("Car Status").setTabListener(new statusFragmentTabListener());
+		tabStatus = actionBar.newTab().setIcon(R.drawable.pin)./*setText("Car Status").*/setTabListener(new statusFragmentTabListener());
 		actionBar.addTab(tabStatus); 
-		tabProfile = actionBar.newTab().setText("Profile").setTabListener(new profileFragmentTabListener());
+		tabProfile = actionBar.newTab().setIcon(R.drawable.profile)./*setText("Profile").*/setTabListener(new profileFragmentTabListener());
 		actionBar.addTab(tabProfile); 
 		actionBar.setSelectedNavigationItem(0); 
 		ColorDrawable color = new ColorDrawable(Color.RED);

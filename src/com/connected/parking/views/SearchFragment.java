@@ -16,7 +16,14 @@ import android.view.View;
 import android.view.ViewGroup; 
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.FrameLayout.LayoutParams;
+import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
   
@@ -25,9 +32,11 @@ public class SearchFragment extends Fragment{
 
 	private Context context = null; 
 	private View parentView;
+	EditText edit;
 	Button setting_network;
 	TextView warning_text;
-	Button search_view;
+	ImageButton search_view;
+	ListView searchListView;
 	
 	public SearchFragment(){ 
 	}
@@ -51,9 +60,39 @@ public class SearchFragment extends Fragment{
 	private View init(LayoutInflater inflater, ViewGroup container) {
 		
 		View view = inflater.inflate(R.layout.user_search, container, false); 
+	 
 		setting_network = (Button)view.findViewById(R.id.setting_network); 
 		warning_text = (TextView)view.findViewById(R.id.tv_warning);
-		search_view = (Button)view.findViewById(R.id.search_view);
+		
+		edit = (EditText)view.findViewById(R.id.search_edit); 
+		search_view = (ImageButton)view.findViewById(R.id.search);
+		searchListView = (ListView)view.findViewById(R.id.search_result);
+		searchListView.setAdapter(new BaseAdapter() {
+			
+			@Override
+			public View getView(int arg0, View arg1, ViewGroup arg2) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public long getItemId(int arg0) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public Object getItem(int arg0) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+		});
 		if(AppStatus.isOnline(context)){ 
 			setting_network.setVisibility(View.GONE); 
 			warning_text.setVisibility(View.GONE);

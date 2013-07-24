@@ -3,6 +3,7 @@ package com.connected.parking.controller;
 import android.annotation.SuppressLint;
 import android.os.Bundle; 
 import android.support.v4.app.FragmentTransaction;
+import android.view.Window;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -44,6 +45,7 @@ public class BaseActivity extends SlidingFragmentActivity {
 		sm.setFadeDegree(0.15f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		 
+		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 

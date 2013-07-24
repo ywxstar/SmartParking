@@ -2,13 +2,74 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent">
+    
+   <!--  <Searchable
+        android:id="@+id/search"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"/> -->
+        
+    <LinearLayout  
+        android:id="@+id/search_view"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp" 
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+        
+        
+     <!--    <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="match_parent"
+            android:layout_weight="8"
+            android:layout_height="45dp" 
+            android:padding="2dp"
+            android:background="@drawable/abs__ic_search"/> -->
+        <EditText 
+            android:id="@+id/search_edit" 
+            android:layout_width="fill_parent" 
+            android:layout_height="45dp"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:background="@drawable/search_view_selector"
+            android:hint="search location"/>
+        
+        <ImageButton
+	        android:id="@+id/search"
+	        android:layout_width="37dp"
+	        android:layout_height="37dp" 
+	        android:layout_marginTop="4dp"
+	        android:padding="5dp"
+	        android:layout_marginLeft="-47dp"
+	        android:background="@drawable/search_btn_selector"
+	        android:layout_centerHorizontal="true"
+        />
+        
+    </LinearLayout>
+    
+    <ScrollView 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/search_view"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_marginTop="5dp">
+    <ListView
+        android:id="@+id/search_result"
+        
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        ></ListView>
+    
+    </ScrollView>
     
     <Button
         android:id="@+id/setting_network"
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="50dp" 
+        android:visibility="gone"
         android:text="network setting"
         android:background="#eeaaee"/>
     
@@ -16,21 +77,11 @@
         android:id="@+id/tv_warning"
         android:layout_width="wrap_content"
         android:layout_height="46dp" 
+        android:visibility="gone"
         android:layout_centerInParent="true"
         android:text="网络已断开，无法联网"
         android:background="#ffffff"
         android:textColor="#aa3300"
         android:textSize="32sp" />
-        
-     
-    
-    <Button
-        android:id="@+id/search_view"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:text="搜索"
-        android:layout_centerHorizontal="true"
-        />
-    
-
+         
 </RelativeLayout>
