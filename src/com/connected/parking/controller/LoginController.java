@@ -89,8 +89,24 @@ public class LoginController extends Activity{
 				}else{
 					new LoginTask().execute();
 				}*/
+			
+ 			 /*Intent intent = new Intent(LoginController.this,  ProfileController.class);
+ 			 intent.putExtra("username",username );
+ 			 intent.putExtra("profile_picture",img );
+ 			 intent.putExtra("id",id );
+ 			 
+ 			 Bundle bundle=new Bundle();
+ 			 bundle.putString("username", username);
+ 			 bundle.putString("profile_picture", img);
+ 			 bundle.putString("id", id);  
+ 			 intent.putExtras(bundle); */
 				
 				Intent intent = new Intent(LoginController.this,  ProfileController.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("username", "username");
+				bundle.putString("profile_picture", "url");
+				//bundle.putString("id", id);
+				intent.putExtras(bundle);
 				startActivity(intent);
 				overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
 				
@@ -99,19 +115,21 @@ public class LoginController extends Activity{
 	}
 	
 	
-	/*public void ToLearnMore(View view){
+	public void ToLearnMore(View view){
 		
 		Intent intent = new Intent(LoginController.this, LearnMoreController.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
-	}*/
-	
-	public void AppSetting(View view){
-		Intent intent = new Intent(LoginController.this, SettingController.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
 	}
 	
+	public void AppSetting(View view){
+		Log.i("AppSetting", "appsetting");
+		Intent intent1 = new Intent(LoginController.this, SettingController.class);
+		startActivity(intent1);
+		overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+		 
+	}
+	 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu){
 		

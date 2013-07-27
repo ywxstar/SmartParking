@@ -28,6 +28,11 @@
         <item name="homeAsUpIndicator">@drawable/new_indicator</item>
         <item name="android:homeAsUpIndicator">@drawable/new_indicator</item>
     </style>
+    
+   	<style name="PopupAnimation" parent="android:Animation">
+		<item name="android:windowEnterAnimation">@anim/popup_enter</item>
+		<item name="android:windowExitAnimation">@anim/popup_exit</item>
+	</style>
    	
 
 </resources>

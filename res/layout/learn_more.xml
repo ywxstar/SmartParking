@@ -14,10 +14,13 @@
        android:id="@+id/pull_refresh_listview"
        android:layout_height="fill_parent"
        android:layout_width="fill_parent"/> -->
-   <!--  <com.handmark.pulltorefresh.library.PullToRefreshWebView
-	      android:id="@+id/pull_refresh_webview"
-	      android:layout_height="fill_parent"
-	      android:layout_width="fill_parent"
-	      ptr:mode="both" /> -->
+   
+
+	<com.handmark.pulltorefresh.library.PullToRefreshWebView
+        xmlns:ptr="http://schemas.android.com/apk/res/com.connected.parking"
+        android:id="@+id/pull_refresh_webview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        ptr:pullmode="both" />
     
 </LinearLayout>

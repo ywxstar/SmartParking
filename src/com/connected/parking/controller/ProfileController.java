@@ -4,6 +4,7 @@ import java.util.ArrayList;
   
 import android.app.NotificationManager;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,23 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnKeyListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.PopupWindow;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.connected.parking.R;    
 import com.connected.parking.views.CarStatusFragment;
 import com.connected.parking.views.ColorFragment; 
@@ -38,6 +53,10 @@ public class ProfileController extends BaseActivity {
 	private Tab tabSearch;
  	private Tab tabStatus;
  	private Tab tabProfile; 
+ 	
+ 	private PopupWindow popupWindow;
+ 	private Button profile_setting_btn = null;
+ 	private Button log_out = null;
 	
 	public ProfileController() {
 		super(R.string.viewpager);
@@ -53,9 +72,11 @@ public class ProfileController extends BaseActivity {
 		vp.setId("VP".hashCode());
 		fragmentList = new ArrayList<Fragment>();
 		// 初始化Fragment，传入fragmentList
+		Bundle bundle = new Bundle();
+		bundle = getIntent().getExtras();
 		search_fragment = new SearchFragment(ProfileController.this);
 		car_status_fragment = new CarStatusFragment(ProfileController.this, this, notificationManager);
-		uer_profile_fragment = new UserProfileFragment(ProfileController.this, this, notificationManager); 
+		uer_profile_fragment = new UserProfileFragment(ProfileController.this, this, notificationManager, bundle); 
 		
 		fragmentList.add(search_fragment);
 		fragmentList.add(car_status_fragment);
@@ -195,6 +216,48 @@ public class ProfileController extends BaseActivity {
 			// TODO Auto-generated method stub 
 		}
 		
+	}
+	
+	///////////////////////////////////////////////////////////
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			//toggle();
+			return true;
+		case R.id.github:
+			//Util.goToGitHub(this);
+			OpenPopWindow();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	public void OpenPopWindow(){
+		
+		LayoutInflater mLayoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		ViewGroup menuView = (ViewGroup) mLayoutInflater.inflate(
+				R.layout.popup, null, true);
+		profile_setting_btn = (Button)menuView.findViewById(R.id.profile_settings);
+		log_out = (Button)menuView.findViewById(R.id.log_out);
+	
+		popupWindow = new PopupWindow(menuView, LayoutParams.WRAP_CONTENT,
+				LayoutParams.WRAP_CONTENT, true);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.setAnimationStyle(R.style.PopupAnimation);
+		
+		int[] location = new int[2];  
+        vp.getLocationOnScreen(location);
+		popupWindow.showAtLocation(vp, /*Gravity.CENTER
+				| Gravity.CENTER*/Gravity.NO_GRAVITY, location[0] + vp.getWidth(), location[1] 
+						- 50*popupWindow.getHeight());
+		popupWindow.update();
 	}
 	  
 }

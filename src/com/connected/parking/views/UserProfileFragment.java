@@ -46,8 +46,8 @@ public class UserProfileFragment extends Fragment{
 	private Context context = null;
 	private NotificationManager notifiManager;
 	private View parentView;
-	ImageView user_image;
-	private View view;
+	//ImageView user_image;
+	//private View view;
 	
 	private String[] items = new String[] { "选择本地图片", "拍照" };
 	//上传图片路径
@@ -57,10 +57,12 @@ public class UserProfileFragment extends Fragment{
 	private static final int CAMERA_REQUEST_CODE = 1;
 	private static final int RESULT_REQUEST_CODE = 2;
 	
-	public UserProfileFragment(Context con , Activity ac,  NotificationManager nm){
+	public UserProfileFragment(Context con , Activity ac,  NotificationManager nm, 
+			Bundle bundle){
 		this.context = con ;
 		this.activity = ac;
 		this.notifiManager = nm;
+		Log.i("async", bundle.getString("username") + "--------" + bundle.getString("profile_picture"));
 	}
 
 	@Override
@@ -76,8 +78,8 @@ public class UserProfileFragment extends Fragment{
 	//====================================
 	private View init(LayoutInflater inflater, ViewGroup container) {
 		
-		view = inflater.inflate(R.layout.user_profile, container, false); 
-	    user_image = (ImageView)view.findViewById(R.id.user_image);
+		View view = inflater.inflate(R.layout.user_profile, container, false); 
+		ImageView user_image = (ImageView)view.findViewById(R.id.user_image);
 	    ImageView user_setting = (ImageView)view.findViewById(R.id.user_setting);
 	    user_setting.setOnClickListener(new UserSettingClickListener());
 	    Bitmap tempBitmap = getBitmapResource();
@@ -234,7 +236,7 @@ public void uploadPhoto(){
 		if (extras != null) {
 			Bitmap photo = extras.getParcelable("data");
 			Drawable drawable = new BitmapDrawable(photo);
-			user_image.setImageDrawable(drawable);
+			((ImageView)parentView.findViewById(R.id.user_image)).setImageDrawable(drawable);
 			startUpload(photo);
 		}
 	}

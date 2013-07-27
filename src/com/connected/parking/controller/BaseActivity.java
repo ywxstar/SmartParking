@@ -49,25 +49,6 @@ public class BaseActivity extends SlidingFragmentActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			//toggle();
-			return true;
-		case R.id.github:
-			//Util.goToGitHub(this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	/*public class BasePagerAdapter extends FragmentPagerAdapter {
 		
 		private List<Fragment> mFragments = new ArrayList<Fragment>();

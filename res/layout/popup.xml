@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+    
+    <Button 
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/profile_settings" 
+        android:text = "profile setting"
+        android:textColor="#ff0000"
+        android:background="#000000"/>
+    
+    <Button 
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/log_out" 
+        android:text="log out"
+        android:textColor="#0000ff"
+        android:background="#000000"/>
+    
+
+</LinearLayout>

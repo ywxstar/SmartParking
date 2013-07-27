@@ -151,7 +151,8 @@
 	        android:layout_marginTop="20dp"
 	        android:padding="3dp"
 	        android:background="#dff6ff"
-	        android:text="Twitter" />
+	        android:text="Twitter" 
+	        android:onClick="LearnMore"/>
 	    
    	</LinearLayout>
 

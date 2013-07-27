@@ -149,7 +149,8 @@
             android:enabled="true"
             android:minWidth="80dip"
             android:padding="3dp"
-            android:textColor="#3cc1f8" />
+            android:textColor="#3cc1f8"
+            android:onClick="ToLearnMore" />
 
     </LinearLayout>
   <!---->
