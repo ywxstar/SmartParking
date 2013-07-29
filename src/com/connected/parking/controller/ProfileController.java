@@ -7,33 +7,23 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment; 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnKeyListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.PopupWindow;
-import android.widget.AdapterView.OnItemClickListener;
+import android.support.v4.view.ViewPager.OnPageChangeListener; 
+import android.view.Gravity; 
+import android.view.LayoutInflater; 
+import android.view.ViewGroup; 
+import android.view.ViewGroup.LayoutParams; 
+import android.widget.Button; 
+import android.widget.PopupWindow; 
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.connected.parking.R;    
-import com.connected.parking.views.CarStatusFragment;
-import com.connected.parking.views.ColorFragment; 
+import com.connected.parking.views.CarStatusFragment; 
 import com.connected.parking.views.MainFragmentPagerAdapter;
 import com.connected.parking.views.SearchFragment;
 import com.connected.parking.views.UserProfileFragment; 
@@ -42,7 +32,7 @@ import com.slidingmenu.lib.SlidingMenu;
 
 public class ProfileController extends BaseActivity {
 
-	private ActionBar actionBar;
+	//private ActionBar actionBar;
 	private ViewPager vp;
 	private ArrayList<Fragment> fragmentList;
 	private SearchFragment search_fragment = null;
@@ -66,9 +56,10 @@ public class ProfileController extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		 
+		//setContentView(R.layout.user_profile_controller);//vp); 
 		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		
-		vp = new ViewPager(this); 
+		vp = /*(ViewPager)findViewById(R.id.view_pager);*/new ViewPager(this); 
 		vp.setId("VP".hashCode());
 		fragmentList = new ArrayList<Fragment>();
 		// 初始化Fragment，传入fragmentList
@@ -108,7 +99,7 @@ public class ProfileController extends BaseActivity {
 		getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
 		vp.setOnPageChangeListener(new mOnPageChangeListener());
 		
-		actionBar = getSupportActionBar();  
+	/*	actionBar = getSupportActionBar();  
 		//actionBar.setDisplayHomeAsUpEnabled(true);
 		//actionBar.setIcon(R.drawable.logo);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -116,16 +107,16 @@ public class ProfileController extends BaseActivity {
 //		actionBar.setDisplayShowTitleEnabled(false);
 //		actionBar.setDisplayShowHomeEnabled(false);
 		 
-		tabSearch = actionBar.newTab().setIcon(R.drawable.abs__ic_search)./*setText("Search").*/setTabListener(new searchFragmentTabListener());
+		tabSearch = actionBar.newTab().setIcon(R.drawable.abs__ic_search).setText("Search").setTabListener(new searchFragmentTabListener());
 		actionBar.addTab(tabSearch);
-		tabStatus = actionBar.newTab().setIcon(R.drawable.pin)./*setText("Car Status").*/setTabListener(new statusFragmentTabListener());
+		tabStatus = actionBar.newTab().setIcon(R.drawable.pin).setText("Car Status").setTabListener(new statusFragmentTabListener());
 		actionBar.addTab(tabStatus); 
-		tabProfile = actionBar.newTab().setIcon(R.drawable.profile)./*setText("Profile").*/setTabListener(new profileFragmentTabListener());
+		tabProfile = actionBar.newTab().setIcon(R.drawable.profile).setText("Profile").setTabListener(new profileFragmentTabListener());
 		actionBar.addTab(tabProfile); 
 		actionBar.setSelectedNavigationItem(0); 
 		ColorDrawable color = new ColorDrawable(Color.RED);
 		color.setAlpha(255);
-		actionBar.setBackgroundDrawable(color);
+		actionBar.setBackgroundDrawable(color);*/
 		
 		//getSlidingMenu().setSecondaryMenu(R.layout.setting_controller);
 		//getSlidingMenu().setSecondaryShadowDrawable(R.drawable.shadowright);
@@ -154,7 +145,7 @@ public class ProfileController extends BaseActivity {
 		@Override
 		public void onPageSelected(int arg0) {
 			// TODO Auto-generated method stub 
-			actionBar.setSelectedNavigationItem(arg0);
+			//actionBar.setSelectedNavigationItem(arg0);
 		} 
 	}
 	

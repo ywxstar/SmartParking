@@ -45,8 +45,8 @@ public class BaseActivity extends SlidingFragmentActivity {
 		sm.setFadeDegree(0.15f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		 
-		getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	/*public class BasePagerAdapter extends FragmentPagerAdapter {
