@@ -8,17 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.connected.parking.R;
+import com.internet.android.http.AsyncHttpClient;
+import com.internet.android.http.AsyncHttpResponseHandler;
+import com.internet.android.http.RequestParams;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +33,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class RegisterController extends Activity{
 
@@ -96,12 +104,12 @@ public class RegisterController extends Activity{
 	
 	 public void CreateUser(View button) {
 		  
-		   Long ts = convertDateToMilliSeconds(new Date(System.currentTimeMillis()));    		   
-		   getSha(String.valueOf(ts)+"YWFmOGMzNWJlNjk"); 
+//		   Long ts = convertDateToMilliSeconds(new Date(System.currentTimeMillis()));    		   
+//		   getSha(String.valueOf(ts)+"YWFmOGMzNWJlNjk"); 
 		   String email = txtEmail.getText().toString();
 		   String password = txtPassword.getText().toString();
   
-		   if(!txtEmail.getText().toString().contains("@")){
+		 /*  if(!txtEmail.getText().toString().contains("@")){
 			   showAlert("'email' is required");
 		   }
 		   
@@ -122,16 +130,16 @@ public class RegisterController extends Activity{
 			  
 			  showAlert("Passwords do not match");
 			  return;
-		  }
+		  }*/
 		
-		   DefaultHttpClient client = new DefaultHttpClient();
+		  /*DefaultHttpClient client = new DefaultHttpClient();
 	       HttpPost httppost = new HttpPost("http://api.ticketline.co.uk//user");
 	       List<BasicNameValuePair> nvps = new ArrayList<BasicNameValuePair>();
 	       nvps.add(new BasicNameValuePair("method", "create"));
 	       nvps.add(new BasicNameValuePair("username",email ));
 	       nvps.add(new BasicNameValuePair("password",password ));
 	       
-	       /*nvps.add(new BasicNameValuePair("api-token",converted ));
+	       nvps.add(new BasicNameValuePair("api-token",converted ));
 	       nvps.add(new BasicNameValuePair("first-name",fname));
 	       nvps.add(new BasicNameValuePair("last-name",lname ));
            nvps.add(new BasicNameValuePair("device-uuid",deviceId));
@@ -142,7 +150,7 @@ public class RegisterController extends Activity{
 	       nvps.add(new BasicNameValuePair("country-id","66009" ));
 	       nvps.add(new BasicNameValuePair("phone",phone ));
 	       nvps.add(new BasicNameValuePair("timestamp",String.valueOf(ts) ));*/
-	       
+	      /* 
 	       nvps.add(new BasicNameValuePair("api-key", "NGNkZGRhYjkzY2Z"));
 	       
 	       try {
@@ -162,13 +170,13 @@ public class RegisterController extends Activity{
 	           Log.i("response",s);	              
                switch(responseCode) {
                    case 200:
-                	    /*
+                	    
 						showAlert(suc);
 						 Intent AR = new Intent(getApplicationContext(),TicketlineActivity.class);
 						 AR.putExtra("TAB", "1");
 						           startActivity(AR);
 						           finish();
-						 */	                  
+						 	                  
              	   break;
                    case 400:
                 	   JSONObject jArray = new JSONObject(s);
@@ -187,10 +195,85 @@ public class RegisterController extends Activity{
            		}
         	} catch (Exception e) { 
         		e.printStackTrace();     
-	        } 
+	        } */
+	       
+	        Log.i("makeRequest", /*username+"   "*/ email); 
+	        AsyncHttpClient http_client = new AsyncHttpClient();
+	        RequestParams params1 = new RequestParams();
+	        //params1.put("username", username);
+	        params1.put("email", email);
+	        params1.put("password", password);
+	        params1.put("api-key", "NGNkZGRhYjkzY2Z");
+		                  
+	        Log.i("eventstaker", /*email+"   "+*/ password);
+	        http_client.addHeader("Accept", "application/json;q=0.9");
+	        http_client.setTimeout(4000);
+	        //client.setSSLSocketFactory(mySocketFactory);
+	        http_client.post("http://192.168.2.100:8080/signup", params1, new AsyncHttpResponseHandler() {
+	        	
+	        	private ProgressDialog pDialog; 
+	            public void onStart() {
+	                // Initiated the request
+	    			pDialog = new ProgressDialog(RegisterController.this);
+	    			pDialog.setCancelable(true);
+	    			pDialog.setProgressStyle(0);
+	    			pDialog.setMessage("Please Wait");
+	    			pDialog.show();        		
+	            }
+	        	 
+	            public void onSuccess(String response) {
+	                //System.out.println(response);
+	   			    Toast.makeText(RegisterController.this, response, 1000).show(); 
+		        	JSONObject data,user;
+					try {
+						 data = new JSONObject(response);
+						 String token = data.getString("access_token");
+						 user = data.getJSONObject("user");
+						 String username = user.getString("username"), 
+								 id = user.getString("id"), 
+								 img =user.getString("profile_picture") ;
+		                 
+			 			 Intent intent = new Intent(RegisterController.this,  ProfileController.class);
+			 			 intent.putExtra("username",username );
+			 			 intent.putExtra("profile_picture",img );
+			 			 intent.putExtra("id",id );
+			 			 
+			 			 
+						 startActivity(intent);
+						 overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+						 finish();
+						 
+					} catch (JSONException e) {
+						e.printStackTrace();
+						Toast.makeText(RegisterController.this, "Invalid JSON", 1000).show();
+					}   			    
+	   			    
+	   			    
+	            }
+	             
+	            public void onFailure(Throwable e, String response) {
+	                Log.i("eventstaker", "onFailure method is run... :( "+response);
+	                if(e instanceof java.net.ConnectException){
+	                	Toast.makeText(RegisterController.this, "no network  ", 1000).show();
+	                	
+	                }else if(e instanceof HttpResponseException){                
+	                    HttpResponseException hre = (HttpResponseException) e;
+	                    int statusCode = hre.getStatusCode();
+	                    Toast.makeText(RegisterController.this, "fail  "+response+"    status:"+statusCode, 1000).show();
+	                }
+	            }
+	             
+	            public void onFinish() {
+	    			if (null != pDialog && pDialog.isShowing()) {
+	    				pDialog.dismiss();
+	    			}            
+	    		}
+	            
+	            
+	        });
 	 }
 	 
-	public static long convertDateToMilliSeconds(Date date) {
+	/*public static long convertDateToMilliSeconds(Date date) {
 		     
 		 return date.getTime();
 	}
@@ -227,7 +310,7 @@ public class RegisterController extends Activity{
 	         buf.append(hexDigit[b[j] & 0x0f]);
 	      }
 	      return buf.toString();
-	 }	
+	 }	*/
 	
 	
 	 private void showAlert(String message) {

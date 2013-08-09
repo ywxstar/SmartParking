@@ -3,6 +3,7 @@ package com.connected.parking.controller;
 import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -27,6 +29,10 @@ import org.json.JSONObject;
 import com.actionbarsherlock.widget.SearchView;
 import com.connected.parking.R;  
 import com.connected.parking.model.SessionManager;
+import com.connected.parking.views.CustomProgressDialog;
+import com.internet.android.http.AsyncHttpClient;
+import com.internet.android.http.AsyncHttpResponseHandler;
+import com.internet.android.http.RequestParams;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -106,20 +112,107 @@ public class LoginController extends Activity{
 				bundle.putString("username", "username");
 				bundle.putString("profile_picture", "url");
 				//bundle.putString("id", id);
+//				CustomProgressDialog dialog = CustomProgressDialog.createDialog(LoginController.this);
+//				dialog.setMessage("loading...");
+//				dialog.show();
 				intent.putExtras(bundle);
 				startActivity(intent);
 				overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
-				
+				//makeRequest(uname.getText().toString(), passwd.getText().toString());
 			}
 		});
 	}
 	
+	private void makeRequest(String username, String pass){
+		
+		AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params1 = new RequestParams();
+        params1.put("username", username);
+        params1.put("password", pass);
+        Log.i("eventstaker", username+"   " + pass);
+        client.addHeader("Accept", "application/json;q=0.9");
+        client.setTimeout(4000);
+         
+		 try {
+//			 KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//   		     trustStore.load(null, null);
+//   		     MySSLSocketFactory  sf = new MySSLSocketFactory(trustStore);
+//   		     sf.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//   		     client.setSSLSocketFactory(sf);   
+   		}catch (Exception e) {   
+   			
+   		}         
+        
+        //client.setSSLSocketFactory(mySocketFactory);
+        client.post("http://192.168.2.100/sessions", params1, new AsyncHttpResponseHandler() {
+        	private ProgressDialog pDialog;
+        	public void onStart() {
+                // Initiated the request
+    			pDialog = new ProgressDialog(LoginController.this);
+    			pDialog.setCancelable(true);
+    			pDialog.setProgressStyle(0);
+    			pDialog.setMessage("Please Wait");
+    			pDialog.show();        		
+            }
+        	
+            public void onSuccess(String response) {
+                //System.out.println(response);
+   			    Toast.makeText(LoginController.this, response, 1000).show();
+ 
+	        	JSONObject data,user;
+				try {
+					 data = new JSONObject(response);
+					 String token = data.getString("access_token");
+					 user = data.getJSONObject("user");
+					 String username = user.getString("username"), 
+							 id = user.getString("id"), 
+							 img =user.getString("profile_picture") ;
+	                 session.createLoginSession(username, id,token,img);
+	                 
+		 			 Intent intent = new Intent(LoginController.this,  ProfileController.class);
+		 			 intent.putExtra("username",username );
+		 			 intent.putExtra("profile_picture",img );
+		 			 intent.putExtra("id",id );
+		 			 
+		 			 
+					 startActivity(intent);
+					 overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+					 finish();
+					 
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Toast.makeText(LoginController.this, "Invalid JSON", 1000).show();
+				}   		
+            }
+            
+            public void onFailure(Throwable e, String response) {
+               
+            	Log.i("eventstaker", "onFailure method is run... :( "+response);
+                if(e instanceof java.net.ConnectException){
+                	
+                	Toast.makeText(LoginController.this, "no network  ", 1000).show();
+                }else if(e instanceof HttpResponseException){                
+                    HttpResponseException hre = (HttpResponseException) e;
+                    int statusCode = hre.getStatusCode();
+                    Toast.makeText(LoginController.this, "fail  "+response+"    status:"+statusCode, 1000).show();
+                }
+            }
+            
+            public void onFinish() {
+    			if (null != pDialog && pDialog.isShowing()) {
+    				pDialog.dismiss();
+    			}            
+    		}
+            
+            
+        });
+    }	 
 	
 	public void ToLearnMore(View view){
 		
 		Intent intent = new Intent(LoginController.this, LearnMoreController.class);
 		startActivity(intent);
-		overridePendingTransition(R.anim.in_from_right, R.anim.out_from_left);
+		overridePendingTransition(R.anim.zoom_in,R.anim.zoom_out);//R.anim.in_from_right, R.anim.out_from_left);
 	}
 	
 	public void AppSetting(View view){

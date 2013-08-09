@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.security.acl.NotOwnerException;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import com.connected.parking.R;
 import com.connected.parking.asyntask.UploadPhotoTask;
@@ -22,6 +25,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,7 +40,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 @SuppressLint("ValidFragment")
@@ -81,6 +89,25 @@ public class UserProfileFragment extends Fragment{
 		View view = inflater.inflate(R.layout.user_profile, container, false); 
 		ImageView user_image = (ImageView)view.findViewById(R.id.user_image);
 	    ImageView user_setting = (ImageView)view.findViewById(R.id.user_setting);
+	    ListView listview = (ListView)view.findViewById(R.id.notifi_content);
+	    String[] str = { "notify 1", "notify 2", "notify 3", "notify 4"};
+	    LinkedList<String> mListItems = new LinkedList<String>();
+		mListItems.addAll(Arrays.asList(str));;
+	    listview.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, mListItems));
+	    try {  
+            Field f = AbsListView.class.getDeclaredField("mFastScroller");  
+            f.setAccessible(true);  
+            Object o = f.get(listview);  
+            f = f.getType().getDeclaredField("mThumbDrawable");  
+            f.setAccessible(true);  
+            Drawable drawable = (Drawable) f.get(o);  
+            drawable = getResources().getDrawable(R.drawable.pic1);  
+            f.set(o, drawable);  
+        } catch (Exception e) {  
+            throw new RuntimeException(e);  
+        }  	
+	    
+		
 	    user_setting.setOnClickListener(new UserSettingClickListener());
 	    Bitmap tempBitmap = getBitmapResource();
 	    if(tempBitmap != null){
@@ -116,7 +143,7 @@ public class UserProfileFragment extends Fragment{
 		} 
 	}
 	
-public void uploadPhoto(){
+	public void uploadPhoto(){
 		
 		new AlertDialog.Builder(context)
 		.setTitle("ÉÏ´«Í¼Æ¬")

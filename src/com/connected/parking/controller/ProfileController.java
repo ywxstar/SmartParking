@@ -2,27 +2,46 @@ package com.connected.parking.controller;
    
 import java.util.ArrayList;
   
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.NotificationManager;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment; 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener; 
+import android.support.v4.widget.CursorAdapter;
 import android.view.Gravity; 
+import android.view.KeyEvent;
 import android.view.LayoutInflater; 
+import android.view.View;
 import android.view.ViewGroup; 
 import android.view.ViewGroup.LayoutParams; 
-import android.widget.Button; 
+import android.widget.Button;  
 import android.widget.PopupWindow; 
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+import com.actionbarsherlock.widget.SearchView.OnSuggestionListener;
 import com.connected.parking.R;    
+import com.connected.parking.utils.DefinedToast;
 import com.connected.parking.views.CarStatusFragment; 
 import com.connected.parking.views.MainFragmentPagerAdapter;
 import com.connected.parking.views.SearchFragment;
@@ -32,7 +51,8 @@ import com.slidingmenu.lib.SlidingMenu;
 
 public class ProfileController extends BaseActivity {
 
-	//private ActionBar actionBar;
+	public static Activity ac = null;
+	private ActionBar actionBar;
 	private ViewPager vp;
 	private ArrayList<Fragment> fragmentList;
 	private SearchFragment search_fragment = null;
@@ -47,6 +67,11 @@ public class ProfileController extends BaseActivity {
  	private PopupWindow popupWindow;
  	private Button profile_setting_btn = null;
  	private Button log_out = null;
+ 	
+ 	/**
+	 * 设置搜索适配
+	 */
+	private SuggestionsAdapter suggestion;
 	
 	public ProfileController() {
 		super(R.string.viewpager);
@@ -56,6 +81,7 @@ public class ProfileController extends BaseActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		 
+		this.ac = this;
 		//setContentView(R.layout.user_profile_controller);//vp); 
 		notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		
@@ -99,15 +125,15 @@ public class ProfileController extends BaseActivity {
 		getSlidingMenu().setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN); 
 		vp.setOnPageChangeListener(new mOnPageChangeListener());
 		
-	/*	actionBar = getSupportActionBar();  
+		actionBar = getSupportActionBar();  
 		//actionBar.setDisplayHomeAsUpEnabled(true);
 		//actionBar.setIcon(R.drawable.logo);
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		//actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		//actionBar.setHomeButtonEnabled(true); 
 //		actionBar.setDisplayShowTitleEnabled(false);
 //		actionBar.setDisplayShowHomeEnabled(false);
 		 
-		tabSearch = actionBar.newTab().setIcon(R.drawable.abs__ic_search).setText("Search").setTabListener(new searchFragmentTabListener());
+		/*tabSearch = actionBar.newTab().setIcon(R.drawable.abs__ic_search).setText("Search").setTabListener(new searchFragmentTabListener());
 		actionBar.addTab(tabSearch);
 		tabStatus = actionBar.newTab().setIcon(R.drawable.pin).setText("Car Status").setTabListener(new statusFragmentTabListener());
 		actionBar.addTab(tabStatus); 
@@ -209,6 +235,16 @@ public class ProfileController extends BaseActivity {
 		
 	}
 	
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		// TODO Auto-generated method stub
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			this.finish();
+			overridePendingTransition(R.anim.show_from_left, R.anim.show_from_right);
+		}
+		return super.onKeyUp(keyCode, event);
+	}
+
 	///////////////////////////////////////////////////////////
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -226,9 +262,138 @@ public class ProfileController extends BaseActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		 
 		getSupportMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		final MenuItem item = menu.findItem(R.id.actionbar_search);
+		SearchView searchView = (SearchView) item.getActionView();
+		searchView.setQueryHint("input, please!");
+		//searchView.set
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+				item.collapseActionView();
+				return false;
+			}
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				//DefinedToast defToast = new DefinedToast(ProfileController.ac, ProfileController.this);
+				//defToast.showAlert(newText);
+				return false;
+			}
+		});
+		
+		suggestion = getSuggestions();
+		searchView.setSuggestionsAdapter(suggestion); 
+		searchView.setOnSuggestionListener(new OnSuggestionListener() {
+			
+			@Override
+			public boolean onSuggestionSelect(int position) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean onSuggestionClick(int position) {
+				// TODO Auto-generated method stub
+				Cursor c = (Cursor) suggestion.getItem(position);
+				String query = c.getString(c.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+				Toast.makeText(ProfileController.this, "Suggestion clicked: " + query, Toast.LENGTH_LONG).show();
+			    return true;
+				//return false;
+			}
+		});
+		
+		/**
+		 * 创建一个搜索view
+		 */
+		//SearchView search = new SearchView(getSupportActionBar().getThemedContext());
+		/**
+		 * 添加搜索提示
+		 */
+		//searchView.setQueryHint("Search for contries...");
+		/**
+		 * 设置textview的监听
+		 */
+		//searchView.setOnQueryTextListener(this);
+		/**
+		 * 设置选择搜索结果的监听
+		 */
+		//searchView.setOnSuggestionListener(this);
+		/**
+		 * 设置搜索适配
+		 */
+		//suggestion = getSuggestions();
+		//searchView.setSuggestionsAdapter(suggestion);
+		
+		//return true;
+//		MenuItem search=menu.findItem(R.id.actionbar_search);
+//        search.collapseActionView();
+//        SearchView searchview=(SearchView) search.getActionView();
+//        searchview.setIconifiedByDefault(false);
+//        SearchManager mSearchManager=(SearchManager)getSystemService(Context.SEARCH_SERVICE);
+//        SearchableInfo info=mSearchManager.getSearchableInfo(getComponentName());
+//        searchview.setSearchableInfo(info); //需要在Xml文件加下建立searchable.xml,搜索框配置文件
+		//return super.onCreateOptionsMenu(menu);
+        return true;
 	}
+	
+	
+	/**
+     * 生成一个Search适配器，其中的SearchManager.SUGGEST_COLUMN_TEXT_1 和下面的bindView是对应的
+     * 
+     * @return
+     */
+    private SuggestionsAdapter getSuggestions() {
+        String[] columns = { BaseColumns._ID,
+                SearchManager.SUGGEST_COLUMN_TEXT_1 };
+        MatrixCursor c = new MatrixCursor(columns);
+        c.addRow(new String[] { "1", "New_0" });
+        c.addRow(new String[] { "2", "New_1" });
+        c.addRow(new String[] { "3", "New_2" });
+        c.addRow(new String[] { "4", "New_3" });
+        return new SuggestionsAdapter(this, c);
+    }
+
+    /**
+     * 为Search添加搜索结果的类，创建布局和添加搜索结果
+     * 
+     * @author Administrator
+     * 
+     */  
+	private class SuggestionsAdapter extends CursorAdapter {
+
+        public SuggestionsAdapter(Context context, Cursor c) {
+            super(context, c, 0);
+            // TODO Auto-generated constructor stub
+        }
+ 
+        /**
+         * 为每一个item，添加搜索结果
+         */
+        @Override
+        public void bindView(View arg0, Context arg1, Cursor arg2) {
+            // TODO Auto-generated method stub
+            TextView view = (TextView) arg0;
+            int index = arg2.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1);
+            view.setText(arg2.getString(index));
+        }
+
+        /**
+         * 返回搜索结果的布局，这个是list布局
+         */
+        @Override
+        public View newView(Context arg0, Cursor arg1, ViewGroup arg2) {
+            // TODO Auto-generated method stub
+            LayoutInflater flater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View v = flater.inflate(android.R.layout.simple_list_item_1, arg2,
+                    false);
+            return v;
+        }
+
+    }
 	
 	public void OpenPopWindow(){
 		

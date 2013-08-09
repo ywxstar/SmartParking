@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<set
+<!-- <set
     xmlns:android="http://schmas.android.com/apk/res/android"
     android:shareInterpolator="false">
     
     <translate
-        android:duration="200"
+        android:duration="1000"
         android:fromXDelta="0%p"
-        android:toXDelta="2%p"
+        android:toXDelta="-100%p"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        />
+        /> -->
 <!--     <translate -->
 <!--         android:duration="1000" -->
 <!--         android:fromXDelta="2%p" -->
@@ -24,11 +24,29 @@
 <!--         android:toAlpha="0" -->
 <!--         android:interpolator="@android:anim/accelerate_interpolator"/> -->
 
-    <rotate 
+   <!--  <rotate 
         android:duration="1000"
         android:fromDegrees="0"
         android:toDegrees="360"
         android:pivotX="0"
         android:pivotY="0"
-        android:interpolator="@android:anim/accelerate_interpolator"/>
-</set>
+        android:interpolator="@android:anim/accelerate_interpolator"/> -->
+<!-- </set> -->
+
+<!-- <set xmlns:android="http://schemas.android.com/apk/res/android"> -->
+    
+<!-- <translate xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="500"
+        android:fromXDelta="0%p"
+        android:toXDelta="100%p"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
+        /> -->
+        
+ <alpha xmlns:android="http://schemas.android.com/apk/res/android"
+        android:duration="500"
+        android:fromAlpha="1"
+        android:toAlpha="0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        />
+ 
+<!--  </set> -->

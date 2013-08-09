@@ -50,7 +50,7 @@
             android:background="#fafafa"
             android:ems="10"
             android:hint="Password"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:padding="10dp"
             android:textColor="#C0C0C0"
             android:textColorHint="#cccccc"
